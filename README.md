@@ -105,4 +105,4 @@ By adding
 LIGHTDM_CONF='user-session=guest'
 ```
 
-to the [clients] section of `/etc/ltsp/ltsp.conf`, all clients will log in with the new session.
+to the `[clients]` section of `/etc/ltsp/ltsp.conf`, all clients will log in with the new session.
