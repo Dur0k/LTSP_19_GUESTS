@@ -1,4 +1,4 @@
-# Guest accounts for LTSP 19
+# Guest session for LTSP 19
 ## About
 In the following a guest session for use with the Linux Terminal Server Project (LTSP) will be set up. Its goal is to assign each client computer a guest account based on the IP address. The home folder of the account will be deleted and recreated from a template. Afterwards the client will automatically log in with that account. For this to work a custom xsession will be created.
 
