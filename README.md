@@ -1,15 +1,14 @@
-# Guest session for LTSP 19
-## About
+# About
 In the following a guest session for use with the Linux Terminal Server Project (LTSP) will be set up. Its goal is to assign each client computer a guest account based on the IP address. The home folder of the account will be deleted and recreated from a template. Afterwards the client will automatically log in with that account. For this to work a custom xsession will be created.
 
-## LTSP installation
+# LTSP installation
 To install LTSP visit [Installation](https://github.com/ltsp/ltsp/wiki/installation).
 
-## Guest session setup
+# Guest session setup
 This section contains the setup instructions and starts with changing [/etc/ltsp/ltsp.conf](https://github.com/ltsp/ltsp/blob/master/docs/ltsp.conf.5.md), sharing parts of the home folder via [ltsp nfs(8)](https://github.com/ltsp/ltsp/blob/master/docs/ltsp-nfs.8.md)
  and generating guest accounts. Then a custom xsession will be created which executes a script before starting the desktop environment.
  
-### Configuring ltsp.conf
+## Configuring ltsp.conf
 An initial `ltsp.conf` can be created with
 ```text
 install -m 0660 -g sudo /usr/share/ltsp/common/ltsp/ltsp.conf /etc/ltsp/ltsp.conf
@@ -36,7 +35,7 @@ for client IP 192.168.67.32
 `"ltsp/guest"` assigns each hostname a corresponding user, eg. `ltsp32` -> `guest32`.
 
 
-### Creating guest accounts
+## Creating guest accounts
 By using the following script several users with the name `guest${ip}` will be created. The variable `ip` ranges from 20 to 250. This should be changed depending on the IP address range in `/etc/dnsmasq.d/ltsp-dnsmasq.conf` or how the router is configured.
 To run the small script create a file, eg. `createguests.sh` paste the content 
 
@@ -68,14 +67,14 @@ Afterwards run it as root:
 Now 230 users will be created with their `/home` folders in `/home/nfs` and the password `guest`.
 
 
-### /home/nfs as NFS share
+## /home/nfs as NFS share
 To serve only the guest accounts via NFS, the folder `/home/nfs` will be exported. This is done by adding the following line to `/etc/exports.d/ltsp-nfs.exports`.
 ```text
 /home/nfs               *(rw,async,no_subtree_check,no_root_squash,insecure)
 ```
 
 
-### Create the guest session
+## Create the guest session
 With a custom xsession we are able to modify the `/home` folder before starting the desktop environment. For a new session the file `/usr/share/xsessions/guest.desktop` with the content
 ```text
 [Desktop Entry]
