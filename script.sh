@@ -6,7 +6,7 @@ basename="guest"
 pw_basename="guest"
 # does the system have two NICs, one facing the clients, one the internet? if yes then put 0.
 proxy_dhcp=0
-
+nfs_ip=""
 
 red=`tput setaf 1`
 green=`tput setaf 2`
@@ -70,35 +70,7 @@ echo "${green}Create ltsp.conf${reset}"
 install -m 0660 -g sudo /usr/share/ltsp/common/ltsp/ltsp.conf /etc/ltsp/ltsp.conf
 
 # overwrite it
-cat >/etc/ltsp/ltsp.conf <<EOL
-# /bin/sh -n
-# LTSP configuration file
-# Documentation=man:ltsp.conf(5)
-
-# The special [server] section is evaluated only by the ltsp server
-[server]
-# Enable NAT on dual NIC servers
-# NAT=1
-# Provide a full menu name for x86_32.img when `ltsp ipxe` runs
-# IPXE_X86_32_IMG="Debian Buster"
-
-# The special [common] section is evaluated by both the server and ltsp clients
-[common]
-# Specify an alternative TFTP_DIR
-# TFTP_DIR=/var/lib/tftpboot
-
-# In the special [clients] section, parameters for all clients can be defined.
-# Most ltsp.conf parameters should be placed here.
-[clients]
-FSTAB_NFS="SERVER_IP:/home/nfs /home nfs defaults,nolock 0 0"
-AUTOLOGIN="ltsp/guest"
-RELOGIN=1
-PASSWORDS_GUEST="guest/guest"
-POST_INIT_link="ln -s /etc/ltsp/guest.desktop /usr/share/xsessions/guest.desktop"
-
-[5c:9a:d8:67:09:3f]
-PWMERGE_SUR="lehrer"
-EOL
+cp ltsp.conf /etc/ltsp/ltsp.conf
 
 echo "${green}Add accounts${reset}"
 # Add a teacher account
@@ -130,11 +102,9 @@ Type=Application
 DesktopNames=GUEST
 EOL
 
-cat >/etc/ltsp/setupsession.sh <<EOL
-#!/bin/bash
-rm -R /home/${USER}; mkdir -p /home/${USER}; rsync -rtvp /etc/ltsp/template/ /home/${USER}; chown -R ${USER}:${USER} /home/${USER}
-startxfce4
-EOL
+cp setupsession.sh /etc/ltsp/setupsession.sh
+
+chmod +x /etc/ltsp/setupsession.sh
 
 echo "${green}Downloading template${reset}"
 wget -O /etc/ltsp/template.tar.gz https://durok.tech/gitea/durok/LTSP_19_GUESTS/raw/branch/master/template.tar.gz
