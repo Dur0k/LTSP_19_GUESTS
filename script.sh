@@ -135,3 +135,8 @@ cat >/etc/ltsp/setupsession.sh <<EOL
 rm -R /home/${USER}; mkdir -p /home/${USER}; rsync -rtvp /etc/ltsp/template/ /home/${USER}; chown -R ${USER}:${USER} /home/${USER}
 startxfce4
 EOL
+
+echo "${green}Downloading template${reset}"
+wget -O /etc/ltsp/template.tar.gz https://durok.tech/gitea/durok/LTSP_19_GUESTS/raw/branch/master/template.tar.gz
+tar xvf /etc/ltsp/template.tar.gz --directory /etc/ltsp/
+rm /etc/ltsp/template.tar.gz
